@@ -35,9 +35,9 @@ const SearchInput = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search..."
-        className="input input-bordered rounded-full"
+        className="input input-bordered rounded-full border-primary"
       />
-      <button className="btn btn-circle bg-third text-white" title="Search">
+      <button className="btn btn-circle bg-primary text-white" title="Search">
         <IoSearch className="w-6 h-6 outline-none" />
       </button>
     </form>
