@@ -3,15 +3,10 @@ import { Link } from "react-router-dom";
 import useLogin from "../../hooks/useLogin";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import { useFetch } from "../../hooks/useFetch";
-
 import axios from 'axios'
 
 const Login = () => {
 
-  // const { loading, login } = useLogin();
-  /* const{loading, error, handleGoogle} = useFetch(
-    "http://localhost:3000/api/v1/auth/google"
-  ) */
   
   const handlGoogleOauth = () => {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
