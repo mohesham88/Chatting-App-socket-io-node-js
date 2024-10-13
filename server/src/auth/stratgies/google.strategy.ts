@@ -20,10 +20,9 @@ passport.use(new Strategy({
     $or : [
       {'google.id' : profile.id},
       {'email.address' : profile.emails?.[0].value},
-      {'username' : profile.displayName}
     ]}
   )
-
+  
   if(user){
     if(!user.google.id){
       // account with email but no goole acount

@@ -1,45 +1,40 @@
-import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+const { createContext, useContext } = require("react");
 
-export const AuthContext = createContext();
 
-export const useAuthContext = () => {
-  return useContext(AuthContext);
-};
 
-export const AuthContextProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState(
-    null
-  );
+const AuthContext = createContext(); 
 
-  useEffect(() => {
-    const authenticate = async () => {
-      const auth = await checkAuth();
-      setAuthUser(auth);
-    }
-    authenticate();
-  }, [])
 
-  return (
-    <AuthContext.Provider value={{ authUser, setAuthUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+export function AuthProvider({ children }) {
+    return (
+      const auth = useProvideAuth();
+        <AuthContext.Provider value={{}}>
+            {children}
+        </AuthContext.Provider>
+    );
+}
 
-export const checkAuth = async () => {
-  try {
-    
-    const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/users/profile`, {
-      withCredentials: true,
-    });
-    
-    if (response.status === 200) {
-      console.log(response)
-      return response.data;
-    }
-  } catch (error) {
-    console.error('Authentication check failed', error);
-  }
-  return null;
-};
+
+export const useAuth = () => {
+  useContext(AuthContext)
+}
+
+function useProvideAuth() {
+  const [user, setUser] = useState(null);
+
+  const signin = (email, password) => {
+    // call the signin api
+    setUser({ email });
+  };
+
+  const signout = () => {
+    // call the signout api
+    setUser(null);
+  };
+
+  return {
+    user,
+    signin,
+    signout
+  };
+}

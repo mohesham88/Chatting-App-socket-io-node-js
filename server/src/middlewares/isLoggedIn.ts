@@ -1,4 +1,5 @@
 import {Express , Request , Response , NextFunction} from "express";
+import { Unauthorized, UnauthorizedError } from "rest-api-errors";
 
 
 
@@ -9,8 +10,10 @@ export function isLoggedInMiddleware (req : Request, res : Response, next : Next
   console.log(req.user)
   if(req.user){
     next();
-  }else 
-    res.status(401).json({
+  }else {
+    throw new UnauthorizedError ('User is not authenticated');
+  }
+    /* res.status(401).json({
       message : "User is not authenticated",
-    })
+    }) */
 }

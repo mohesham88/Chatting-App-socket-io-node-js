@@ -18,7 +18,7 @@ export const server = {
 
 export const MONGO_USER = process.env.MONGO_USER || '';
 export const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
-export const MONGO_URL = process.env.MONGO_URL || '';
+const MONGO_URL = process.env.MONGO_URL || '';
 export const MONGO_DATABASE = process.env.MONGO_DATABASE || '';
 
 

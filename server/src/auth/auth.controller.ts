@@ -20,9 +20,7 @@ app.get('/google/redirect' ,
 
     session : true,
     keepSessionInfo : true,
-  }) , (req , res ) => {
-    console.log(req.user)
-    
+  }) , (req , res ) => {    
     res.redirect(`${process.env.REACT_CLIENT}`)
   }
 )

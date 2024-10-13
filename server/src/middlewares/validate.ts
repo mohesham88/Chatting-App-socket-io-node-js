@@ -11,6 +11,7 @@ const formatValidationErrors = (errors: ValidationError[]): { [key: string]: str
       formattedErrors[error.property] = Object.values(error.constraints).join(', ');
     }
   });
+
   return formattedErrors;
 };
 
@@ -18,13 +19,14 @@ const formatValidationErrors = (errors: ValidationError[]): { [key: string]: str
 
 export const validationMiddleware = (validationSchema : new () => {}) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const result: any = await validationPipe(validationSchema, { ...req.body, ...req.params });
-
-    const errors  = formatValidationErrors(result);
+    const errors : ValidationError[] | null = await validationPipe(validationSchema, { ...req.body, ...req.params });
+   
     if (errors) {
+      const formattedErrors  = formatValidationErrors(errors);
+      console.log(formattedErrors);
       res.status(400).json({
         success: false,
-        errors ,
+        message: {...formattedErrors},
       });
     } else {
       next();
