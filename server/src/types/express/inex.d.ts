@@ -1,15 +1,17 @@
 // src/types/express/index.d.ts
 
-import { Language, User } from "../custom.ts";
+import { Language } from "../custom.ts";
+
+import {UserModel} from '../../users/user.model.js'
 
 // to make the file a module and avoid the TypeScript error
 export {}
 
-declare global {
+declare module "express-serve-static-core" {
   namespace Express {
     export interface Request {
       language?: Language;
-      user?: User;
+      user?: UserModel;
     }
   }
 }

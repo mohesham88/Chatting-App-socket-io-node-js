@@ -94,6 +94,7 @@ const googleSchema : Schema<google> = new Schema<google>({
 
 
 export interface UserModel extends User , Document {
+  username : string,
   profile : Profile,
   active : Boolean,
   google : google,
@@ -106,8 +107,8 @@ export const userSchema  = new Schema<UserModel>({
   username: {
       type: String,
       required: [true, 'username cant be empty'],
-      unique: true,
-      lowercase: true,
+      /* unique: true,
+      lowercase: true, */
       
   },
 

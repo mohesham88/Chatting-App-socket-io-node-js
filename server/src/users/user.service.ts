@@ -1,8 +1,10 @@
 import {Request , Response } from 'express';
+import { Users } from './user.model';
 
 
 
+export const getAllUsers = async function() {
+  const users = await Users.find();
 
-export const signup = function(req : Request , res : Response) {
-
+  return users;
 }

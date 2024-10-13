@@ -1,41 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useLogin from "../../hooks/useLogin";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import { useFetch } from "../../hooks/useFetch";
 import axios from 'axios'
 
-const Login = () => {
 
-  
+const Login = () => {
   const handlGoogleOauth = () => {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     window.open(`${SERVER_URL}/auth/google`)
   }
-
-  /* useEffect(() => {
-    if (window.google) {
-      // console.log()
-      const client_id = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID;
-      google.accounts.id.initialize({
-        client_id,
-        callback: handleGoogle,
-      });
-
-      google.accounts.id.renderButton(document.getElementById("google"), {
-        // type: "standard",
-        theme: "filled_blue",
-        // size: "small",
-        text: "continue_with",
-        shape: "rectangular",
-        size : 'large', 
-        
-      });
-
-      google.accounts.id.prompt()
-    }
-  }, [handleGoogle])
-   */
 
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
@@ -84,7 +58,7 @@ const Login = () => {
 
           </div>
 
-          </div>
+        </div>
         </div>
       </div>
     </div>

@@ -3,7 +3,9 @@ import { validate } from "class-validator";
 
 export * from 'class-validator';
 
-
+/**
+ * @returns {ValidationError[] | null} - returns an array of validation errors if any or null if no errors
+ */
 export const validationPipe = async(schema : new () => {} , requestObject : object) => {
   const transforedClass : any = plainToInstance(schema , requestObject);
 
@@ -12,5 +14,5 @@ export const validationPipe = async(schema : new () => {} , requestObject : obje
   if(errors.length > 0){
     return errors;
   }
-  return true;
+  return null;
 }
