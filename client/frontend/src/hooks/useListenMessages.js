@@ -7,13 +7,19 @@ const useListenMessages = () => {
   const { socket } = useSocketContext();
   const { messages, setMessages } = useConversation();
 
+  const { selectedConversation } = useConversation();
+
   useEffect(() => {
     socket.on("newMessage", (newMessage) => {
       newMessage.shouldShake = true;
       const sound = new Audio(notificationSound);
       sound.play();
+      // console.log(newMessage);
       // const messageText = messages.message;
-      setMessages([...messages, newMessage]);
+      console.log(newMessage.message);
+      if (newMessage.roomId === selectedConversation._id) {
+        setMessages([...messages, newMessage.message]);
+      }
 
       return () => socket?.off("newMessage");
     });
