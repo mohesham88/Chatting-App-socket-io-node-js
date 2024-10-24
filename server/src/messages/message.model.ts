@@ -34,7 +34,7 @@ export interface Message {
 
 
 
-const MessageSchema = new Schema<Message>({
+export const MessageSchema = new Schema<Message>({
   text : {
     type : String,
     required : true,

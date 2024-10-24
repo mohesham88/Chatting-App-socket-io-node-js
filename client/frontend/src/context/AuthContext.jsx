@@ -1,40 +1,20 @@
-const { createContext, useContext } = require("react");
+import { createContext, useContext, useState } from "react";
 
+export const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};
 
-const AuthContext = createContext(); 
+export const AuthContextProvider = ({ children }) => {
+  const [authUser, setAuthUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
 
-
-export function AuthProvider({ children }) {
-    return (
-      const auth = useProvideAuth();
-        <AuthContext.Provider value={{}}>
-            {children}
-        </AuthContext.Provider>
-    );
-}
-
-
-export const useAuth = () => {
-  useContext(AuthContext)
-}
-
-function useProvideAuth() {
-  const [user, setUser] = useState(null);
-
-  const signin = (email, password) => {
-    // call the signin api
-    setUser({ email });
-  };
-
-  const signout = () => {
-    // call the signout api
-    setUser(null);
-  };
-
-  return {
-    user,
-    signin,
-    signout
-  };
-}
+  return (
+    <AuthContext.Provider value={{ authUser, setAuthUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
