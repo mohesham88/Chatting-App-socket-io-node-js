@@ -37,9 +37,9 @@ app.get(
       fullName: req.user?.profile.fullName,
       bio: req.user?.profile.bio,
     };
-    const redirectURL = `${process.env.REACT_CLIENT}/?user=${encodeURIComponent(
-      JSON.stringify(user)
-    )}`;
+    const redirectURL = `${
+      process.env.REACT_CLIENT
+    }/auth/redirect/?user=${encodeURIComponent(JSON.stringify(user))}`;
     res.redirect(redirectURL);
   }
 );

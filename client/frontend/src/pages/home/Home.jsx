@@ -5,6 +5,8 @@ import MessageContainer from "../../components/messages/MessageContainer";
 import { useEffect } from "react";
 
 const Home = () => {
+  
+
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const userData = query.get("user");
