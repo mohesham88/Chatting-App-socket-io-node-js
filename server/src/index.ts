@@ -30,7 +30,7 @@ import NotficationController from "./notifications/notifications.controller";
 import { Server } from "socket.io";
 import { ChatSocket } from "socket";
 
-import { admin, ServiceAccount, initFirebase } from "./firebase/index";
+import { admin, initFirebase } from "./firebase/index";
 
 export const app = express(); // exporting it for testing purposes
 const httpServer = createServer(app);
