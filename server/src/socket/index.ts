@@ -3,6 +3,7 @@ import { Rooms } from "rooms/room.model";
 import { Server } from "socket.io";
 import { UserModel } from "users/user.model";
 import  MessagesModel , {MessageSchema} from "messages/message.model";
+import { sendNotification } from "notifications/notifications.service";
 
 declare module "express-session" {
   interface SessionData {
@@ -62,7 +63,7 @@ export class ChatSocket {
         console.log(`user ${user.username} joined room ${room.name}`);
       }
 
-      socket.on("sendMessage", (Message) => {
+      /* socket.on("sendMessage", async (Message) => {
         const { roomId, message } = Message;
 
         console.log(`message : ${message} in room ${roomId}`);
@@ -70,7 +71,11 @@ export class ChatSocket {
           message,
           roomId,
         });
-      });
+
+
+        
+        
+      }); */
 
       socket.on("join-room", (roomId: string) => {
         // client emits join-room

@@ -1,12 +1,43 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import "./App.css";
 import Home from "./pages/home/Home.jsx";
 import Login from "./pages/login/Login";
 import { useAuthContext } from "./context/AuthContext.jsx";
 import { io, Socket } from "socket.io-client";
-import { Children } from "react";
+import { Children, useEffect } from "react";
 import AuthRedirect from "./pages/login/AuthRedirect.jsx";
+
+import { getToken, onMessage } from "firebase/messaging";
+
+import { messaging } from "./config/firebase";
+import { axiosInstance } from "./axios/instance.js";
+
+const { VITE_APP_VAPID_KEY } = import.meta.env;
+
+async function requestPermission() {
+  //requesting permission using Notification API
+  const permission = await Notification.requestPermission();
+
+  if (permission === "granted") {
+    const token = await getToken(messaging, {
+      vapidKey: VITE_APP_VAPID_KEY,
+    });
+
+    console.log("Token generated : ", token);
+
+    // send the token to the server
+
+    const response = await axiosInstance.post("/notifications/register", {
+      deviceToken: token,
+    });
+
+    console.log("Response : ", response);
+  } else if (permission === "denied") {
+    //notifications are blocked
+    alert("You denied for the notification");
+  }
+}
 
 const PrivateRoute = ({ children }) => {
   const { authUser } = useAuthContext();
@@ -15,6 +46,19 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
+  onMessage(messaging, (payload) => {
+    const senderId = payload.data.senderId;
+
+    console.log("Notification received : ", payload);
+    toast(payload.notification.title, {
+      position: "top-right",
+    });
+  });
+
   return (
     <div
       data-theme="cupcake"

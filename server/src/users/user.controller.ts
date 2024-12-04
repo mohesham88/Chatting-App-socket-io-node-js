@@ -2,9 +2,9 @@ import { Express, Router, Request, Response, NextFunction } from "express";
 import { getAllUsers } from "./user.service";
 import { UserModel, Users } from "./user.model";
 import { IsOptional, IsString, IsUrl } from "class-validator";
-import { validationMiddleware } from "middlewares/validate";
+import { validationMiddleware } from "../middlewares/validate";
 import { profile } from "console";
-import { Rooms } from "rooms/room.model";
+import { Rooms } from "../rooms/room.model";
 import MessageModel from "../messages/message.model";
 const app: Router = Router();
 

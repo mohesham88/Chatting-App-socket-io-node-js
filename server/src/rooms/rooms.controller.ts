@@ -1,88 +1,98 @@
 import { Router } from "express";
 import { Rooms } from "./room.model";
 import { validationMiddleware } from "middlewares/validate";
-import { IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID } from "class-validator";
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsUUID,
+} from "class-validator";
 import { NotFoundError } from "rest-api-errors";
 import mongoose, { isValidObjectId, ObjectId } from "mongoose";
 import { IsValidObjectId } from "utils/custom decorators/IsValidObjectId";
 
 const app = Router();
 
-
 class RoomDTO {
   @IsString()
   @IsNotEmpty()
-  name : string;
-
+  name: string;
 
   @IsString()
   @IsNotEmpty()
-  description : string;
+  description: string;
 
   @IsUrl()
   @IsNotEmpty()
-  picture : string;
+  picture: string;
 }
 
-
-
-
-app.route('/')
-  .get(async (req , res) => {
+app
+  .route("/")
+  .get(async (req, res) => {
     // get all rooms with limit of 20 rooms
     const rooms = await Rooms.find();
 
     return res.status(200).json(rooms);
-
-  }).post( validationMiddleware(RoomDTO) ,async (req , res) => {
-    // create a new Roow
-    const room  = await Rooms.create(req.body) ;
-    return res.status(201).json(room);
   })
-
-
+  .post(validationMiddleware(RoomDTO), async (req, res) => {
+    // create a new Roow
+    const room = await Rooms.create(req.body);
+    return res.status(201).json(room);
+  });
 
 class RoomUpdateDTO {
   @IsString()
   @IsOptional()
-  name : string;
+  name: string;
 
   @IsString()
   @IsOptional()
-  description : string;
+  description: string;
 
   @IsUrl()
   @IsOptional()
-  picture : string;
+  picture: string;
 }
 
-app.patch('/:id' , validationMiddleware(RoomUpdateDTO) , async (req , res) => {
+app.patch("/:id", validationMiddleware(RoomUpdateDTO), async (req, res) => {
   // update a room
-  const room = await Rooms.findByIdAndUpdate(req.params.id , req.body , {
-    new : true,
+  const room = await Rooms.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
   });
   return res.status(200).json(room);
-})
-
-
+});
 
 class JoinRoomDTO {
   @IsValidObjectId() // custom decorator
   @IsNotEmpty()
-  room_id : mongoose.Types.ObjectId;
+  room_id: mongoose.Types.ObjectId;
 
-
+  @IsOptional()
+  @IsString()
+  deviceToken?: string;
 }
 
-
-app.post('/join' , validationMiddleware(JoinRoomDTO) , async (req , res) => {
+app.post("/join", validationMiddleware(JoinRoomDTO), async (req, res) => {
   const room_id = req.body.room_id;
 
-  await Rooms.updateOne({_id : room_id} , {
-    $addToSet : {
-      participants : req.user?._id,
+  const deviceToken = req.body.deviceToken;
+
+  await Rooms.updateOne(
+    { _id: room_id },
+    {
+      $addToSet: {
+        participants: req.user?._id,
+      },
     }
-  })
+  );
+
+
+  // if the deviceToken token is provided, then add the user to the room topic to receive notifications
+  if (deviceToken) {
+    
+  }
 
   /* const room = await Rooms.findById(room_id);
   if(!room){
@@ -96,10 +106,8 @@ app.post('/join' , validationMiddleware(JoinRoomDTO) , async (req , res) => {
     console.log(newRoom);
   } */
   return res.status(200).json({
-    message : 'success'
+    message: "success",
   });
-})
-
+});
 
 export default app;
-

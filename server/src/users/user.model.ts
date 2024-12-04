@@ -1,148 +1,138 @@
-import mongoose , {Model, Schema, Document } from "mongoose";
+import mongoose, { Model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
-
-
-interface Email{
-  address : String,
-  verified : Boolean
+interface Email {
+  address: String;
+  verified: Boolean;
 }
 
-
 const EmailSchema = new Schema<Email>({
-  address : {
-    type : String, 
-    required : true,
-    match : [/\S+@\S+\.\S+/ , 'invalid email address'], 
-    index : true, // indexed as it will be queried alot
-  }, 
+  address: {
+    type: String,
+    required: true,
+    match: [/\S+@\S+\.\S+/, "invalid email address"],
+    index: true, // indexed as it will be queried alot
+  },
   verified: {
-    type : Boolean,
-    default : false,
-  }
-})
-
-
+    type: Boolean,
+    default: false,
+  },
+});
 
 export interface User {
   username: string;
   // password: string;
   email: Email;
-
 }
 
 interface Profile {
-  fullName : String ,
-  avatar : String , // url
-  bio : String,
+  fullName: String;
+  avatar: String; // url
+  bio: String;
 }
 
-const ProfileSchema : Schema<Profile> = new Schema<Profile>({
-  fullName : {
-    type : String,
-    required : true,
-  },
-  avatar : {
+const ProfileSchema: Schema<Profile> = new Schema<Profile>({
+  fullName: {
     type: String,
-    required : false,
-    default : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png"
+    required: true,
   },
-  bio : {
-    type: String, 
+  avatar: {
+    type: String,
+    required: false,
+    default:
+      "https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png",
+  },
+  bio: {
+    type: String,
     required: false,
     /* default : function(){
       console.log(this.fullName);
       return `it's ${this.fullName}}`
     } */
   },
-
-})
-
-ProfileSchema.pre<Profile>('save', function(this : Profile ,next : (err?: Error) => void) {
-  
-  if (!this.bio) {
-    this.bio = `it's ${this.fullName}`;
-  }
-  next();
 });
 
-
+ProfileSchema.pre<Profile>(
+  "save",
+  function (this: Profile, next: (err?: Error) => void) {
+    if (!this.bio) {
+      this.bio = `it's ${this.fullName}`;
+    }
+    next();
+  }
+);
 
 interface google {
-  id: String,
-  token: String,
-  name: String
-
+  id: String;
+  token: String;
+  name: String;
 }
 
-const googleSchema : Schema<google> = new Schema<google>({
-  id : {
-    type : String,
-    required : false,
+const googleSchema: Schema<google> = new Schema<google>({
+  id: {
+    type: String,
+    required: false,
   },
-  token : {
-    type : String,
-    required : false,
+  token: {
+    type: String,
+    required: false,
   },
-  name : {
-    type : String,
-    required : false,
-  }
+  name: {
+    type: String,
+    required: false,
+  },
 });
 
-
-
-
-export interface UserModel extends User , Document {
-  username : string,
-  profile : Profile,
-  active : Boolean,
-  google : google,
+export interface UserModel extends User, Document {
+  username: string;
+  profile: Profile;
+  active: Boolean;
+  google: google;
+  deviceToken: [String];
 }
 
-
-
-export const userSchema  = new Schema<UserModel>({
-
-  username: {
+export const userSchema = new Schema<UserModel>(
+  {
+    username: {
       type: String,
-      required: [true, 'username cant be empty'],
+      required: [true, "username cant be empty"],
       /* unique: true,
       lowercase: true, */
-      
+    },
+
+    email: {
+      type: EmailSchema,
+      required: true,
+      default: () => ({}),
+    },
+
+    profile: {
+      type: ProfileSchema,
+      required: true,
+      default: () => ({}),
+    },
+
+    active: {
+      type: Boolean,
+      default: true,
+    },
+
+    google: {
+      type: googleSchema,
+      required: false,
+      default: () => ({}),
+    },
+
+    deviceToken: {
+      type: [String],
+      required: false,
+      default: [],
+    },
   },
-
-  email : {
-    type : EmailSchema,
-    required : true,
-    default : () => ({})
-  },
-
-
-  profile : {
-    type : ProfileSchema,
-    required : true,
-    default : () => ({})
-  },
-
-  active : {
-    type : Boolean,
-    default : true,
-  },
-
-  google : {
-    type : googleSchema,
-    required : false,
-    default : () => ({})
+  {
+    timestamps: true,
   }
-
-
-
-}, {
-  timestamps : true,
-});
-
-
+);
 
 // Pre-save hook to hash the password if it's modified
 /* userSchema.pre('save' , function (this : UserModel , next){
@@ -170,4 +160,7 @@ export const userSchema  = new Schema<UserModel>({
   return callback(null , bcrypt.compareSync(plaintext, this.password));
 } */
 
-export const Users : Model<UserModel> = mongoose.model<UserModel>('Users', userSchema)
+export const Users: Model<UserModel> = mongoose.model<UserModel>(
+  "Users",
+  userSchema
+);

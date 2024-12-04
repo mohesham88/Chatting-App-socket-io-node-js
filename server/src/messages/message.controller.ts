@@ -5,6 +5,7 @@ import { Rooms } from "rooms/room.model";
 import Messages from "./message.model";
 import { MessagesRequest, validateRoomId } from "./middleware/validateRoomId";
 import { ChatSocket } from "socket";
+import { sendNotification } from "notifications/notifications.service";
 
 const app: Router = Router();
 
@@ -46,6 +47,16 @@ app.post(
       },
     });
     ChatSocket.sendMessageToRoom(room_id, createdMsg);
+
+    console.log("sending notification to room: ", room_id);
+    // send notification to all users in the room
+    await sendNotification(
+      room_id,
+      text,
+      req.user?._id as string,
+      req.user?.username as string
+    );
+
     return res.status(201).json(createdMsg);
   }
 );
